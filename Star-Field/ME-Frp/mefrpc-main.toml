@@ -1,0 +1,46 @@
+serverAddr = '103.109.21.6'
+serverPort = 2789
+user = '6119ba268a433e02a1344bb8348ec118'
+
+[auth]
+method = 'token'
+token = 'MEFrpServerToken'
+
+[[proxies]]
+name = 'SF_MCJE'
+type = 'tcp'
+
+localIP = '0.0.0.0'
+localPort = 12000
+remotePort = 20325
+
+[proxies.transport]
+proxyProtocolVersion = 'v2'
+useEncryption = true
+useCompression = true
+
+[[proxies]]
+name = 'SF_MCBE'
+type = 'udp'
+
+localIP = '0.0.0.0'
+localPort = 13000
+remotePort = 20328
+
+[proxies.transport]
+proxyProtocolVersion = 'v2'
+useEncryption = true
+useCompression = true
+
+[[proxies]]
+name = 'SF_GAME_VOICE'
+type = 'udp'
+
+localIP = '0.0.0.0'
+localPort = 12000
+remotePort = 20325
+
+[proxies.transport]
+proxyProtocolVersion = 'v2'
+useEncryption = true
+useCompression = true

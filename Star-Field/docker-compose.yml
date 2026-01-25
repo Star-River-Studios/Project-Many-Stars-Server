@@ -1,0 +1,135 @@
+services:
+  # ME Frp端口映射服务
+  sf-mefrp:
+    image: mefrp/core-next:latest
+    container_name: Star-Field_ME-Frp-CN
+    restart: on-failure:3
+    stop_grace_period: 15s
+    init: true
+    tty: true
+    volumes:
+      - ./ME-Frp:/app/mefrp:cached
+    command: ["-c", "/app/mefrp/mefrpc-main.toml"]
+    network_mode: host
+
+  # 星空神域-Velocity代理服务器
+  sf-velocity:
+    image: ccr.ccs.tencentyun.com/project-many-stars/many-stars-mc:latest
+    container_name: Star-Field_Velocity
+    restart: on-failure:3
+    stop_grace_period: 30s
+    init: true
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./Velocity:/app/mc-server/Velocity:rw
+    working_dir: /app/mc-server/Velocity
+    command: ["bash", "-c", "chmod +x ./Start.sh && exec ./Start.sh"]
+    networks:
+      - sf-network
+    ports:
+      - 12000:12000/tcp
+      - 12000:12000/udp
+      - 13000:13000/udp
+
+  # 星空神域-大厅服务器
+  sf-lobby:
+    image: ccr.ccs.tencentyun.com/project-many-stars/many-stars-mc:latest
+    container_name: Star-Field_Lobby-Server
+    restart: on-failure:3
+    stop_grace_period: 60s
+    init: true
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./Sub-Server:/app/mc-server/Sub-Server:rw
+    working_dir: /app/mc-server/Sub-Server/lobby
+    command: ["bash", "-c", "chmod +x ./Start.sh && exec ./Start.sh"]
+    networks:
+      - sf-network
+    depends_on:
+      - sf-velocity
+
+  # 星空神域-插件生存服务器
+  sf-survival:
+    image: ccr.ccs.tencentyun.com/project-many-stars/many-stars-mc:latest
+    container_name: Star-Field_Survival-Server
+    restart: on-failure:3
+    stop_grace_period: 60s
+    init: true
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./Sub-Server:/app/mc-server/Sub-Server:rw
+    working_dir: /app/mc-server/Sub-Server/survival
+    command: ["bash", "-c", "chmod +x ./Start.sh && exec ./Start.sh"]
+    networks:
+      - sf-network
+    depends_on:
+      - sf-velocity
+
+  # 星空神域-建筑服务器
+  sf-build:
+    image: ccr.ccs.tencentyun.com/project-many-stars/many-stars-mc:latest
+    container_name: Star-Field_Build-Server
+    restart: on-failure:3
+    stop_grace_period: 60s
+    init: true
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./Sub-Server:/app/mc-server/Sub-Server:rw
+    working_dir: /app/mc-server/Sub-Server/build
+    command: ["bash", "-c", "chmod +x ./Start.sh && exec ./Start.sh"]
+    networks:
+      - sf-network
+    depends_on:
+      - sf-velocity
+
+  # 星空神域-小游戏服务器
+  sf-minigame:
+    image: ccr.ccs.tencentyun.com/project-many-stars/many-stars-mc:latest
+    container_name: Star-Field_MiniGame-Server
+    restart: on-failure:3
+    stop_grace_period: 60s
+    init: true
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./Sub-Server:/app/mc-server/Sub-Server:rw
+    working_dir: /app/mc-server/Sub-Server/minigame
+    command: ["bash", "-c", "chmod +x ./Start.sh && exec ./Start.sh"]
+    networks:
+      - sf-network
+    depends_on:
+      - sf-velocity
+
+  # 星空神域-模组生存服务器
+  sf-mod:
+    image: ccr.ccs.tencentyun.com/project-many-stars/many-stars-mc:latest
+    container_name: Star-Field_Mod-Server
+    restart: on-failure:3
+    stop_grace_period: 60s
+    init: true
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./Sub-Server:/app/mc-server/Sub-Server:rw
+    working_dir: /app/mc-server/Sub-Server/mod
+    command: ["bash", "-c", "chmod +x ./Start.sh && exec ./Start.sh"]
+    networks:
+      - sf-network
+    depends_on:
+      - sf-velocity
+
+networks:
+  # 星空神域-内部桥接网络
+  sf-network:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+        - subnet: fd00:dead:beef:1::/64
+          gateway: fd00:dead:beef:1::1
