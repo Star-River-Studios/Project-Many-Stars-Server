@@ -1,4 +1,4 @@
-serverAddr = '103.109.21.6'
+serverAddr = '119.188.164.166'
 serverPort = 2789
 user = '6119ba268a433e02a1344bb8348ec118'
 
@@ -7,7 +7,7 @@ method = 'token'
 token = 'MEFrpServerToken'
 
 [[proxies]]
-name = 'SF_MCJE'
+name = 'SF-MCJE'
 type = 'tcp'
 
 localIP = '0.0.0.0'
@@ -20,7 +20,7 @@ useEncryption = true
 useCompression = true
 
 [[proxies]]
-name = 'SF_MCBE'
+name = 'SF-MCBE'
 type = 'udp'
 
 localIP = '0.0.0.0'
@@ -33,7 +33,7 @@ useEncryption = true
 useCompression = true
 
 [[proxies]]
-name = 'SF_GAME_VOICE'
+name = 'SF-VOICE'
 type = 'udp'
 
 localIP = '0.0.0.0'
@@ -41,6 +41,5 @@ localPort = 12000
 remotePort = 20325
 
 [proxies.transport]
-proxyProtocolVersion = 'v2'
 useEncryption = true
 useCompression = true
