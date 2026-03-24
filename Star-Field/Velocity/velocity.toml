@@ -81,7 +81,7 @@ central-lobby = "sf-central-lobby:25565"
 plugin-survival = "sf-plugin-survival:25565"
 building-creation = "sf-building-creation:25565"
 mini-game = "sf-mini-game:25565"
-mod-survival = "sf-mod:25565"
+mod-survival = "sf-mod-survival:25565"
 
 
 # In what order we should try servers when a player logs in or is kicked from a server.
