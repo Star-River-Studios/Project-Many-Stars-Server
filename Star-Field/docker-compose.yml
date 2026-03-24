@@ -1,15 +1,26 @@
 services:
-  # ME Frp端口映射服务
-  sf-mefrp:
-    image: mefrp/core-next:latest
-    container_name: Star-Field_ME-Frp-CN
+  # 星空神域-Frp内网穿透服务（主线路）
+  sf-frp-main:
+    image: snowdreamtech/frpc:nightly-alpine
+    container_name: Star-Field_Frp-Main
     restart: on-failure:3
     stop_grace_period: 15s
-    init: true
-    tty: true
+    mem_limit: 128m
     volumes:
-      - ./ME-Frp:/app/mefrp:cached
-    command: ["-c", "/app/mefrp/mefrpc-main.toml"]
+      - ./Frp-Client:/etc/frp:cached
+    command: ["frpc", "-c", "/etc/frp/frpc-main.toml"]
+    network_mode: host
+
+  # 星空神域-Frp内网穿透服务（香港线路）
+  sf-frp-hk:
+    image: snowdreamtech/frpc:nightly-alpine
+    container_name: Star-Field_Frp-HK
+    restart: on-failure:3
+    stop_grace_period: 15s
+    mem_limit: 128m
+    volumes:
+      - ./Frp-Client:/etc/frp:cached
+    command: ["frpc", "-c", "/etc/frp/frpc-hk.toml"]
     network_mode: host
 
   # 星空神域-Velocity代理服务器
@@ -33,9 +44,9 @@ services:
       - 13000:13000/udp
 
   # 星空神域-大厅服务器
-  sf-lobby:
+  sf-central-lobby:
     image: ccr.ccs.tencentyun.com/project-many-stars/many-stars-mc:latest
-    container_name: Star-Field_Lobby-Server
+    container_name: Star-Field_Central-Lobby
     restart: on-failure:3
     stop_grace_period: 60s
     init: true
@@ -51,9 +62,9 @@ services:
       - sf-velocity
 
   # 星空神域-插件生存服务器
-  sf-survival:
+  sf-plugin-survival:
     image: ccr.ccs.tencentyun.com/project-many-stars/many-stars-mc:latest
-    container_name: Star-Field_Survival-Server
+    container_name: Star-Field_Plugin-Survival
     restart: on-failure:3
     stop_grace_period: 60s
     init: true
@@ -65,13 +76,15 @@ services:
     command: ["bash", "-c", "chmod +x ./Start.sh && exec ./Start.sh"]
     networks:
       - sf-network
+    ports:
+      - 8100:8100/tcp
     depends_on:
       - sf-velocity
 
   # 星空神域-建筑服务器
-  sf-build:
+  sf-building-creation:
     image: ccr.ccs.tencentyun.com/project-many-stars/many-stars-mc:latest
-    container_name: Star-Field_Build-Server
+    container_name: Star-Field_Building-Creation
     restart: on-failure:3
     stop_grace_period: 60s
     init: true
@@ -83,13 +96,15 @@ services:
     command: ["bash", "-c", "chmod +x ./Start.sh && exec ./Start.sh"]
     networks:
       - sf-network
+    ports:
+      - 8100:8100/tcp
     depends_on:
       - sf-velocity
 
   # 星空神域-小游戏服务器
-  sf-minigame:
+  sf-mini-game:
     image: ccr.ccs.tencentyun.com/project-many-stars/many-stars-mc:latest
-    container_name: Star-Field_MiniGame-Server
+    container_name: Star-Field_Mini-Game
     restart: on-failure:3
     stop_grace_period: 60s
     init: true
@@ -105,9 +120,9 @@ services:
       - sf-velocity
 
   # 星空神域-模组生存服务器
-  sf-mod:
+  sf-mod-survival:
     image: ccr.ccs.tencentyun.com/project-many-stars/many-stars-mc:latest
-    container_name: Star-Field_Mod-Server
+    container_name: Star-Field_Mod-Survival
     restart: on-failure:3
     stop_grace_period: 60s
     init: true
@@ -119,6 +134,8 @@ services:
     command: ["bash", "-c", "chmod +x ./Start.sh && exec ./Start.sh"]
     networks:
       - sf-network
+    ports:
+      - 8100:8100/tcp
     depends_on:
       - sf-velocity
 
